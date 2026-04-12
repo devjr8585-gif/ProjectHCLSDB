@@ -1,0 +1,173 @@
+{% extends 'Admin/MAdmin/mabase.html' %}
+{% load static %}
+
+{% block title %}Add Operational Admin - Admin Panel{% endblock %}
+
+{% block content %}
+
+<div class="container py-5">
+	<div class="row justify-content-center">
+		<div class="col-md-8 col-lg-6">
+			<div class="card shadow-sm">
+				<div class="card-header bg-success text-white">
+					<h4 class="mb-0">➕ Add Operational Admin</h4>
+				</div>
+				<div class="card-body p-4">
+					<p class="text-muted mb-4">Add a new Operational Admin to your team. They will need to activate their account before they can log in.</p>
+
+					{% if error %}
+						<div class="alert alert-danger" role="alert">{{ error }}</div>
+					{% endif %}
+
+					{% if success %}
+						<div class="alert alert-success" role="alert">{{ success }} The user will need to activate their account.</div>
+					{% endif %}
+
+					<form method="post" id="addAdminForm" novalidate>
+						{% csrf_token %}
+
+						<div class="mb-3">
+							<label for="email" class="form-label">Email</label>
+							<input type="email" class="form-control" id="email" name="email" value="{{ request.POST.email|default:'' }}" required autocomplete="email" placeholder="admin@example.com">
+						</div>
+
+						<div class="mb-3">
+							<label for="username" class="form-label">Username</label>
+							<input type="text" class="form-control" id="username" name="username" value="{{ request.POST.username|default:'' }}" required autocomplete="username" placeholder="Enter username">
+						</div>
+
+						<div class="mb-3">
+							<label for="phone" class="form-label">Phone (optional)</label>
+							<input type="tel" class="form-control" id="phone" name="phone" value="{{ request.POST.phone|default:'' }}" inputmode="tel" placeholder="+91 555 555 5555">
+						</div>
+
+						<!-- Hidden field: Operational Admin is the only option -->
+						<input type="hidden" name="admin_type" value="2">
+
+						<div class="mb-3">
+							<label for="password" class="form-label">Password</label>
+							<div class="input-group">
+								<input type="password" class="form-control" id="password" name="password" required aria-describedby="pwdHelp">
+								<button type="button" class="btn btn-outline-secondary" id="togglePwd" aria-label="Show password" style="border: 1px solid #dee2e6;">
+									<img src="{% static 'images/eye-solid.png' %}" alt="Show password" id="passwordToggle" width="20px" height="20px">
+								</button>
+							</div>
+							<div id="pwdHelp" class="form-text">Minimum 8 characters. Use letters, numbers, and symbols for a stronger password.</div>
+							<div class="progress mt-2" style="height:8px;"><div id="pwdStrength" class="progress-bar" role="progressbar" style="width:0%"></div></div>
+						</div>
+
+						<div class="mb-3">
+							<label for="confirm_password" class="form-label">Confirm password</label>
+							<div class="input-group">
+								<input type="password" class="form-control" id="confirm_password" name="confirm_password" required>
+								<button type="button" class="btn btn-outline-secondary" id="toggleConfirmPwd" aria-label="Show password" style="border: 1px solid #dee2e6;">
+									<img src="{% static 'images/eye-solid.png' %}" alt="Show password" id="confirmPasswordToggle" width="20px" height="20px">
+								</button>
+							</div>
+						</div>
+
+						<div class="alert alert-info" role="alert">
+							<strong>ℹ️ Account Type:</strong> This user will be registered as an <strong>Operational Admin</strong>. They will have access to operational dashboards and staff management.
+						</div>
+
+						<div class="d-grid mb-3">
+							<button type="submit" class="btn btn-success btn-lg" id="submitBtn">Create Operational Admin</button>
+						</div>
+
+						<div class="text-center small">
+							<a href="{% url 'profile' %}">Back to Profile</a> | 
+							<a href="{% url 'dashboard' %}">Back to Dashboard</a>
+						</div>
+					</form>
+				</div>
+			</div>
+		</div>
+	</div>
+</div>
+
+<script>
+	(function(){
+		const pwd = document.getElementById('password');
+		const toggle = document.getElementById('togglePwd');
+		const confirm = document.getElementById('confirm_password');
+		const toggleConfirm = document.getElementById('toggleConfirmPwd');
+		const strength = document.getElementById('pwdStrength');
+		const form = document.getElementById('addAdminForm');
+		const btn = document.getElementById('submitBtn');
+
+		function scorePassword(s){
+			let score = 0;
+			if (!s) return 0;
+			if (s.length >= 8) score += 25;
+			if (/[A-Z]/.test(s)) score += 20;
+			if (/[0-9]/.test(s)) score += 20;
+			if (/[^A-Za-z0-9]/.test(s)) score += 35;
+			return Math.min(score,100);
+		}
+
+		// Toggle password visibility
+		if (toggle && pwd) toggle.addEventListener('click', (e)=>{
+			e.preventDefault();
+			const t = pwd.getAttribute('type') === 'password' ? 'text' : 'password';
+			pwd.setAttribute('type', t);
+			
+			const toggleImg = document.getElementById('passwordToggle');
+			if (t === 'password') {
+				toggleImg.src = "{% static 'images/eye-solid.png' %}";
+				toggleImg.alt = "Show password";
+				toggle.setAttribute('aria-label', 'Show password');
+			} else {
+				toggleImg.src = "{% static 'images/eye-slash-solid.png' %}";
+				toggleImg.alt = "Hide password";
+				toggle.setAttribute('aria-label', 'Hide password');
+			}
+		});
+
+		// Toggle confirm password visibility
+		if (toggleConfirm && confirm) toggleConfirm.addEventListener('click', (e)=>{
+			e.preventDefault();
+			const t = confirm.getAttribute('type') === 'password' ? 'text' : 'password';
+			confirm.setAttribute('type', t);
+			
+			const toggleImg = document.getElementById('confirmPasswordToggle');
+			if (t === 'password') {
+				toggleImg.src = "{% static 'images/eye-solid.png' %}";
+				toggleImg.alt = "Show password";
+				toggleConfirm.setAttribute('aria-label', 'Show password');
+			} else {
+				toggleImg.src = "{% static 'images/eye-slash-solid.png' %}";
+				toggleImg.alt = "Hide password";
+				toggleConfirm.setAttribute('aria-label', 'Hide password');
+			}
+		});
+
+		// Password strength indicator
+		if (pwd && strength) pwd.addEventListener('input', ()=>{
+			const s = scorePassword(pwd.value);
+			strength.style.width = s + '%';
+			strength.className = 'progress-bar ' + (s < 40 ? 'bg-danger' : s < 75 ? 'bg-warning' : 'bg-success');
+		});
+
+		// Form validation
+		if (form) {
+			form.addEventListener('submit', function(e){
+				if (!form.checkValidity()) { 
+					form.classList.add('was-validated'); 
+					e.preventDefault(); 
+					e.stopPropagation(); 
+					return; 
+				}
+				if (pwd.value !== confirm.value) { 
+					e.preventDefault(); 
+					e.stopPropagation(); 
+					alert('Passwords do not match'); 
+					return; 
+				}
+				btn.disabled = true; 
+				btn.textContent = 'Creating...';
+			});
+		}
+	})();
+</script>
+
+{% endblock %}

@@ -16,22 +16,21 @@
         <!-- LEFT NAV -->
         <td width="20%" valign="top" class="bg-dark" style="padding-left:20px;">
 
-            <h2 class="text-white">HCLS Operational Admin</h2>
-            <hr>
+            <h4 class="text-white text-center" style="font-size: 20px; padding:5px; text-decoration: underline;">AHS(Automanager Healthcare System)</h4>
+            <hr class="border-white">
 
-            <p><a href="{% url 'OAdashboard' %}" style="color: white;">Dashboard</a></p>
-            <p><a href="{% url 'OAprofile' %}" style="color: white;">Profile</a></p>
+            <button class="btn btn-dark btn btn-outline-secondary" style="height: 40px;margin-bottom: 10px;" ><a href="{% url 'OAdashboard' %}" style="text-align: center; color: white; text-decoration: none;">Dashboard</a></button>
+            <button class="btn btn-dark btn btn-outline-secondary" style="height: 40px; margin-bottom: 10px;" ><a href="{% url 'OAprofile' %}" style="text-align: center; color: white; text-decoration: none;">Profile</a></button>
 
            <div class="d-grid gap-5">
 
     <!-- Doctor -->
     <div class="dropdown w-100">
-        <button class="btn btn-primary dropdown-toggle w-100"
-                data-bs-toggle="dropdown" style="margin-bottom: 10px;">
+        <button class="btn btn-dark btn btn-outline-secondary  w-10" data-bs-toggle="dropdown" style="text-align: left; color: white;">
             Doctor
         </button>
 
-        <ul class="dropdown-menu w-100 shadow">
+        <ul class="dropdown-menu w-10 shadow">
             <li>
                 <a class="dropdown-item" href="{% url 'doctoradd' %}">
                     Add Doctor
@@ -47,12 +46,12 @@
 
     <!-- Helper -->
     <div class="dropdown w-100">
-        <button class="btn btn-primary dropdown-toggle w-100"
-                data-bs-toggle="dropdown" style="margin-bottom: 10px;">
+        <button class="btn btn-dark btn btn-outline-secondary  w-10"
+                data-bs-toggle="dropdown" style="text-align: left; color: white;">
             Helper
         </button>
 
-        <ul class="dropdown-menu w-100 shadow">
+        <ul class="dropdown-menu w-10 shadow">
             <li>
                 <a class="dropdown-item" href="{% url 'helperadd' %}">
                     Add Helper
@@ -68,12 +67,12 @@
 
     <!-- Receptionist -->
     <div class="dropdown w-100">
-        <button class="btn btn-primary dropdown-toggle w-100"
-                data-bs-toggle="dropdown" style="margin-bottom: 10px;">
+        <button class="btn btn-dark btn btn-outline-secondary  w-10"
+                data-bs-toggle="dropdown" style="text-align: left; color: white;">
             Receptionist
         </button>
 
-        <ul class="dropdown-menu w-100 shadow">
+        <ul class="dropdown-menu w-10 shadow">
             <li>
                 <a class="dropdown-item" href="{% url 'receptionistadd' %}">
                     Add Receptionist
@@ -89,12 +88,12 @@
 
     <!-- Pharmacy -->
     <div class="dropdown w-100">
-        <button class="btn btn-primary dropdown-toggle w-100"
-                data-bs-toggle="dropdown" style="margin-bottom: 10px;">
+        <button class="btn btn-dark btn btn-outline-secondary  w-10"
+                data-bs-toggle="dropdown" style="text-align: left; color: white;">
             Pharmacist
         </button>
 
-        <ul class="dropdown-menu w-100 shadow">
+        <ul class="dropdown-menu w-10 shadow">
             <li>
                 <a class="dropdown-item" href="#">
                     Add Pharmacist
@@ -110,20 +109,20 @@
 
     <!-- Diagonist -->
     <div class="dropdown w-100">
-        <button class="btn btn-primary dropdown-toggle w-100"
-                data-bs-toggle="dropdown" style="margin-bottom: 10px;">
+        <button class="btn btn-dark btn btn-outline-secondary  w-10"
+                data-bs-toggle="dropdown" style="text-align: left; color: white;">
             Diagonist Lab
         </button>
 
-        <ul class="dropdown-menu w-100 shadow">
+        <ul class="dropdown-menu w-10 shadow">
             <li>
                 <a class="dropdown-item" href="#">
-                    Add Receptionist
+                    Add Lab Incharge
                 </a>
             </li>
             <li>
                 <a class="dropdown-item" href="#">
-                    Add Lab Incharge
+                    Manage Lab Incharge
                 </a>
             </li>
         </ul>
@@ -146,7 +145,8 @@
                         </a>
 
                         <div>
-                            <div class="small text-muted">Welcome back</div>
+                            <div class="small text-muted">
+                                <strong><h3>AHS Operational Admin</h3></strong>Welcome back</div>
                             <div class="h5 mb-0">
                                 Hi,
                                 {% if admin_name %}
@@ -186,14 +186,39 @@
                 <div class="container-fluid d-flex justify-content-between align-items-center">
 
                     <div class="small">
-                        &copy; {{ year|default:2026 }} HCLSDB App. All rights reserved.
+                        &copy; {{ year|default:2026 }} AHS App. All rights reserved.
                     </div>
 
                     <div class="small">
                         <a href="#" class="text-white text-decoration-none me-3">About</a>
                         <a href="#" class="text-white text-decoration-none me-3">Privacy</a>
-                        <a href="#" class="text-white text-decoration-none">Contact</a>
+                        <a href="#" class="text-white text-decoration-none" data-bs-toggle="modal" data-bs-target="#contactModal">Contact</a>
                     </div>
+                    <!-- <div class="modal fade" id="contactModal" tabindex="-1" aria-labelledby="contactModalLabel" aria-hidden="true">
+    <div class="modal-dialog modal-dialog-centered">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="contactModalLabel">Contact AHS</h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+            <div class="modal-body">
+                <form id="contactForm">
+                    <div class="mb-3">
+                        <label for="contactEmail" class="form-label">Email</label>
+                        <input type="email" class="form-control" id="contactEmail" placeholder="you@example.com" required>
+                    </div>
+                    <div class="mb-3">
+                        <label for="contactMessage" class="form-label">Message</label>
+                        <textarea class="form-control" id="contactMessage" rows="3" required></textarea>
+                    </div>
+                    <div class="d-grid">
+                        <button class="btn btn-primary" type="submit">Send</button>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+</div> -->
 
                     <div>
                         <a href="#"><img src="{% static 'images/facebook.png' %}" width="22" height="22"></a>
@@ -201,6 +226,8 @@
                         <a href="#"><img src="{% static 'images/instagram.png' %}" width="22" height="22"></a>
                         <a href="#"><img src="{% static 'images/linkedin.png' %}" width="22" height="22"></a>
                     </div>
+
+                </div>
 
                 </div>
             </footer>
@@ -225,6 +252,22 @@
     }
     update();
     setInterval(update, 1000);
+    // const contactForm = document.getElementById('contactForm');
+    //     if (contactForm) {
+    //         contactForm.addEventListener('submit', function(e){
+    //             e.preventDefault();
+    //             // lightweight UX-only submission: show success then close
+    //             const btn = this.querySelector('button[type="submit"]');
+    //             btn.disabled = true; btn.textContent = 'Sending...';
+    //             setTimeout(()=>{
+    //                 btn.disabled = false; btn.textContent = 'Send';
+    //                 const m = bootstrap.Modal.getInstance(document.getElementById('contactModal'));
+    //                 m.hide();
+    //                 alert('Thank you — we will respond to ' + document.getElementById('contactEmail').value + '.');
+    //                 this.reset();
+    //             }, 800);
+    //         });
+    //     }
 })();
 </script>
 <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js"></script>

@@ -15,6 +15,7 @@ urlpatterns = [
     path('add/', views.add, name='add'),
     path('add-operational-admin/', views.add_operational_admin, name='add_operational_admin'),
     path('manage/', views.manage, name='manage'),
+    path('edit/<int:id>/', views.edit, name='edit'),
     path('OAdashboard/', views.OAdashboard, name='OAdashboard'),
     path('OAprofile/', views.OAprofile, name='OAprofile'),
     path('doctoradd/', views.doctoradd, name='doctoradd'),

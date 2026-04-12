@@ -1,0 +1,8 @@
+Django==6.0.2
+djangorestframework>=3.12
+drf-yasg>=1.20
+mysqlclient>=2.1
+Pillow>=9.0
+
+# Optional (only if you prefer PyMySQL instead of mysqlclient)
+# PyMySQL>=1.0.2

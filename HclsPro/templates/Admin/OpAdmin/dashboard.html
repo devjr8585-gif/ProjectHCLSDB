@@ -5,7 +5,7 @@
 <div class="container-fluid py-3">
 	<div class="row mb-3">
 		<div class="col">
-			<h2 class="mb-0">Operational Dashboard</h2>
+			<h2 class="mb-0">Dashboard</h2>
 			<small class="text-muted">Overview of daily operations and quick actions</small>
 		</div>
 		<div class="col-auto">
@@ -135,19 +135,35 @@
 
 </div>
 
+<script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+
+{{ chart_labels|json_script:"labels-data" }}
+{{ chart_data|json_script:"chart-data" }}
+
 <script>
-// Render small operations chart if Chart.js is available
 (function(){
-	const ctx = document.getElementById('opChart');
-	if (!ctx) return;
-	if (typeof Chart === 'undefined') return;
-	const labels = {{ chart_labels|default:'[]'|safe }};
-	const data = {{ chart_data|default:'[]'|safe }};
-	new Chart(ctx, {
-		type: 'bar',
-		data: { labels: labels, datasets: [{ label: 'Events', data: data, backgroundColor: 'rgba(13,110,253,0.7)' }] },
-		options: { responsive:true, maintainAspectRatio:false, plugins:{legend:{display:false}} }
-	});
+    const ctx = document.getElementById('opChart');
+    if (!ctx) return;
+
+    const labels = JSON.parse(document.getElementById('labels-data').textContent);
+    const data = JSON.parse(document.getElementById('chart-data').textContent);
+
+    new Chart(ctx, {
+        type: 'bar',
+        data: {
+            labels: labels,
+            datasets: [{
+                label: 'Events',
+                data: data,
+                backgroundColor: 'rgba(13,110,253,0.7)'
+            }]
+        },
+        options: {
+            responsive: true,
+            maintainAspectRatio: false,
+            plugins: { legend: { display: false } }
+        }
+    });
 })();
 </script>
 

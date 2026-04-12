@@ -8,14 +8,18 @@
 			<h2 class="mb-0">Dashboard</h2>
 			<small class="text-muted">Overview of hospital activity and quick actions</small>
 		</div>
-		<div class="col-auto">
-			<a href="/add/" class="btn btn-primary">New Record</a>
-		</div>
+		<!-- <div class="col-auto d-flex align-items-center gap-2">
+			<button class="btn btn-outline-secondary d-flex align-items-center" id="btnExport">
+				<svg width="16" height="16" viewBox="0 0 24 24" fill="none" class="me-1"><path d="M12 5v10m0 0l-4-4m4 4l4-4" stroke="#000" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/></svg>
+				Export
+			</button>
+			<a href="/add/" class="btn btn-rich">Add Admin</a>
+		</div> -->
 	</div>
 
 	<div class="row g-3 mb-3">
 		<div class="col-6 col-md-3">
-			<div class="card shadow-sm">
+			<div class="card card-modern shadow-sm">
 				<div class="card-body d-flex align-items-center">
 					<div class="me-3">
 						<svg width="40" height="40" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg" aria-hidden="true">
@@ -32,7 +36,7 @@
 		</div>
 
 		<div class="col-6 col-md-3">
-			<div class="card shadow-sm">
+			<div class="card card-modern shadow-sm">
 				<div class="card-body d-flex align-items-center">
 					<div class="me-3">
 						<svg width="40" height="40" viewBox="0 0 24 24" fill="none"><path d="M12 2a4 4 0 100 8 4 4 0 000-8zM6 20v-1a4 4 0 014-4h4a4 4 0 014 4v1" fill="#198754"/></svg>
@@ -46,7 +50,7 @@
 		</div>
 
 		<div class="col-6 col-md-3">
-			<div class="card shadow-sm">
+			<div class="card card-modern shadow-sm">
 				<div class="card-body d-flex align-items-center">
 					<div class="me-3">
 						<svg width="40" height="40" viewBox="0 0 24 24" fill="none"><path d="M3 12h18M12 3v18" stroke="#ffc107" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg>
@@ -60,7 +64,7 @@
 		</div>
 
 		<div class="col-6 col-md-3">
-			<div class="card shadow-sm">
+			<div class="card card-modern shadow-sm">
 				<div class="card-body d-flex align-items-center">
 					<div class="me-3">
 						<svg width="40" height="40" viewBox="0 0 24 24" fill="none"><path d="M3 13h18v8H3zM7 13V6h10v7" fill="#6c757d"/></svg>
@@ -74,51 +78,107 @@
 		</div>
 	</div>
 
-	<div class="row">
-		<div class="col-lg-8 mb-3">
-			<div class="card">
-				<div class="card-header d-flex justify-content-between align-items-center">
-					<strong>Recent Activity</strong>
-					<small class="text-muted">Last 24 hours</small>
-				</div>
-				<div class="table-responsive">
-					<table class="table table-sm table-hover mb-0">
-						<thead class="table-light">
-							<tr>
-								<th scope="col">Time</th>
-								<th scope="col">Event</th>
-								<th scope="col">User</th>
-								<th scope="col">Status</th>
-							</tr>
-						</thead>
-						<tbody>
-							{% for act in recent_activities %}
-							<tr>
-								<td>{{ act.time|default:'—' }}</td>
-								<td>{{ act.message|default:'—' }}</td>
-								<td>{{ act.user|default:'System' }}</td>
-								<td><span class="badge bg-{{ act.level|default:'secondary' }}">{{ act.status|default:'info' }}</span></td>
-							</tr>
-							{% empty %}
-							<tr>
-								<td>09:12</td>
-								<td>New patient registered</td>
-								<td>reception</td>
-								<td><span class="badge bg-success">Completed</span></td>
-							</tr>
-							<tr>
-								<td>08:45</td>
-								<td>Appointment booked</td>
-								<td>john.doe</td>
-								<td><span class="badge bg-warning">Pending</span></td>
-							</tr>
-							{% endfor %}
-						</tbody>
-					</table>
+	<div class="row g-3 mb-3">
+		<div class="col-6 col-md-3">
+			<div class="card card-modern shadow-sm">
+				<div class="card-body d-flex align-items-center">
+					<div class="me-3">
+						<svg width="40" height="40" viewBox="0 0 24 24" fill="none"><path d="M12 12c2.21 0 4-1.79 4-4s-1.79-4-4-4-4 1.79-4 4 1.79 4 4 4z" fill="#0d6efd"/></svg>
+					</div>
+					<div>
+						<div class="small text-muted">OpAdmin Active</div>
+						<div class="h4 mb-0">{{ opadmin_active_count|default:'0' }}</div>
+					</div>
 				</div>
 			</div>
 		</div>
 
+		<div class="col-6 col-md-3">
+			<div class="card card-modern shadow-sm">
+				<div class="card-body d-flex align-items-center">
+					<div class="me-3">
+						<svg width="40" height="40" viewBox="0 0 24 24" fill="none"><path d="M12 12c2.21 0 4-1.79 4-4s-1.79-4-4-4-4 1.79-4 4 1.79 4 4 4z" fill="#dc3545"/></svg>
+					</div>
+					<div>
+						<div class="small text-muted">OpAdmin Inactive</div>
+						<div class="h4 mb-0">{{ opadmin_inactive_count|default:'0' }}</div>
+					</div>
+				</div>
+			</div>
+		</div>
+	</div>
+
+	<div class="row">
+		<div class="col-12 mb-3">
+			<div class="card card-modern">
+				<div class="card-header d-flex justify-content-between align-items-center">
+					<div>
+						<strong>Operational Admins</strong>
+						<div class="small text-muted">Recent activity & management</div>
+					</div>
+					<div class="d-flex gap-2 align-items-center">
+						<input id="opSearch" class="form-control form-control-sm" placeholder="Search admins">
+						<button id="refreshOp" class="btn btn-sm btn-outline-secondary">Refresh</button>
+						<a href="/admin/add/" class="btn btn-sm btn-rich">+ Add</a>
+					</div>
+				</div>
+				<div class="card-body">
+					<div class="table-responsive">
+						<table class="table table-sm table-hover align-middle mb-0" id="opAdminTable">
+							<thead class="table-light small">
+								<tr>
+									<th>ID</th>
+									<th>Admin</th>
+									<th>Role</th>
+									<th>Email</th>
+									<th>Phone</th>
+									<th>Created By</th>
+									<th>Created On</th>
+									<th>Status</th>
+									<th class="text-end">Actions</th>
+								</tr>
+							</thead>
+							<tbody>
+								{% for a in opadmins %}
+								<tr data-id="{{ a.id }}">
+									<td class="text-muted small">{{ a.id }}</td>
+									<td>
+										<div class="d-flex align-items-center">
+											<div class="avatar me-2" style="width:36px;height:36px;border-radius:50%;background:#f0f0f0;display:flex;align-items:center;justify-content:center;font-weight:600;color:#6c757d">{{ a.name|slice:":1"|upper }}</div>
+											<div>
+												<div class="fw-semibold">{{ a.name }}</div>
+												<div class="small text-muted">{{ a.email }}</div>
+											</div>
+										</div>
+									</td>
+									<td>{{ a.role }}</td>
+									<td class="text-truncate" style="max-width:160px">{{ a.email }}</td>
+									<td>{{ a.phone|default:'—' }}</td>
+									<td>{{ a.created_by }}</td>
+									<td>{{ a.created_on|date:'SHORT_DATETIME_FORMAT' }}</td>
+									<td>
+										<div class="d-flex align-items-center">
+											<span class="status-circle {% if a.status|lower == 'active' %}active{% else %}inactive{% endif %}"></span>
+											<span class="ms-2 small">{{ a.status }}</span>
+										</div>
+									</td>
+									<td class="text-end">
+										<a href="{% url 'edit' a.id %}" class="btn btn-sm btn-outline-secondary">Edit</a>
+										<button data-id="{{ a.id }}" class="btn btn-sm btn-outline-danger btn-delete">Delete</button>
+									</td>
+								</tr>
+								{% empty %}
+								<tr><td colspan="9" class="text-center text-muted">No Operational Admins found.</td></tr>
+								{% endfor %}
+							</tbody>
+						</table>
+					</div>
+				</div>
+			</div>
+		</div>
+	</div>
+
+	<div class="row">
 		<div class="col-lg-4 mb-3">
 			<div class="card mb-3">
 				<div class="card-header"><strong>Quick Actions</strong></div>
@@ -130,7 +190,9 @@
 					</div>
 				</div>
 			</div>
+		</div>
 
+		<div class="col-lg-8 mb-3">
 			<div class="card">
 				<div class="card-header d-flex justify-content-between align-items-center">
 					<strong>Activity Chart</strong>
@@ -161,6 +223,30 @@
 			});
 		}catch(e){console.warn('Chart render failed', e)}
 	}
+	
+})();
+
+// OpAdmin table search + delete handler
+(function(){
+	const search = document.getElementById('opSearch');
+	const table = document.getElementById('opAdminTable');
+	if (search && table){
+		search.addEventListener('input', ()=>{
+			const q = search.value.toLowerCase();
+			Array.from(table.querySelectorAll('tbody tr')).forEach(tr=>{
+				const txt = tr.textContent.toLowerCase();
+				tr.style.display = txt.includes(q) ? '' : 'none';
+			});
+		});
+	}
+
+	// delete buttons (client-side placeholder)
+	document.querySelectorAll('#opAdminTable .btn-delete').forEach(btn=>btn.addEventListener('click', ()=>{
+		const id = btn.getAttribute('data-id');
+		if (!confirm('Delete Operational Admin #' + id + '?')) return;
+		// TODO: implement server-side delete endpoint and POST with CSRF
+		console.log('Would delete OpAdmin', id);
+	}));
 })();
 </script>
 

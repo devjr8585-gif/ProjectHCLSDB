@@ -4,21 +4,23 @@
 {% block title %}Home - Admin Panel{% endblock %}
 
 {% block content %}
+
+<!-- Hero (home page only) -->
 <div class="container-fluid bg-light py-5" aria-labelledby="home-hero">
     <div class="container">
         <div class="row align-items-center">
             <div class="col-lg-7">
-                <h1 id="home-hero" class="display-5 fw-bold">Welcome to HCLSDB</h1>
+                <h1 id="home-hero" class="display-5 fw-bold">Welcome to AHS(Automanager Healthcare System) Admin</h1>
                 <p class="lead text-muted">Centralized hospital data, staffing and appointments — fast, secure, and simple.</p>
-                <p class="mb-4">Login in to manage records or explore demo features below.</p>
+                <p class="mb-4">Login to manage records or register to get started.</p>
                 <div class="d-flex gap-2">
-                    <a href="{% url 'login' %}" class="btn btn-primary btn-lg">Login</a>
-                    <a href="{% url 'register' %}" class="btn btn-outline-secondary btn-lg">Register</a>
+                    <a href="{% url 'login' %}" class="btn-rich primary btn-lg" style="text-decoration: none;">Login</a>
+                    <a href="{% url 'register' %}" class="btn-rich ghost btn-lg" style="text-decoration: none;">Register</a>
                 </div>
             </div>
-            <!-- <div class="col-lg-5 d-none d-lg-block text-center">
-                <img src="{% static 'Images/hero.png' %}" alt="HCLS illustration" class="img-fluid" style="max-height:240px">
-            </div> -->
+            <div class="col-lg-5 d-none d-lg-block text-center">
+                <!-- <img src="{% static 'images/hero-doctor.png' %}" alt="AHS illustration" class="img-fluid" style="max-height:260px"> -->
+            </div>
         </div>
     </div>
 </div>
@@ -80,7 +82,7 @@
             <div class="list-group">
                 <div class="list-group-item list-group-item-action">
                     <div class="d-flex w-100 justify-content-between">
-                        <h5 class="mb-1">HCLSDB v2.0 released</h5>
+                        <h5 class="mb-1">AHS v2.0 released</h5>
                         <small class="text-muted">2 days ago</small>
                     </div>
                     <p class="mb-1 text-muted">Performance improvements and easier appointment workflows.</p>
@@ -109,7 +111,7 @@
     <div class="modal-dialog modal-dialog-centered">
         <div class="modal-content">
             <div class="modal-header">
-                <h5 class="modal-title" id="signupModalLabel">Sign up for HCLSDB</h5>
+                <h5 class="modal-title" id="signupModalLabel">Sign up for AHS</h5>
                 <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
             </div>
             <div class="modal-body">
@@ -128,7 +130,7 @@
     <div class="modal-dialog modal-dialog-centered">
         <div class="modal-content">
             <div class="modal-header">
-                <h5 class="modal-title" id="contactModalLabel">Contact HCLSDB</h5>
+                <h5 class="modal-title" id="contactModalLabel">Contact AHS</h5>
                 <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
             </div>
             <div class="modal-body">

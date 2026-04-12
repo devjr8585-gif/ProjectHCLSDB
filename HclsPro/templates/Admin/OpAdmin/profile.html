@@ -8,16 +8,66 @@
 			<div class="card text-center">
 				<div class="card-body">
 					<div class="mb-3">
-						<img id="avatarPreview" src="{% if user and user.profile.avatar %}{{ user.profile.avatar.url }}{% else %}{% static 'images/hlogo2.png' %}{% endif %}" alt="Avatar" class="rounded-circle" width="140" height="140">
+						{% if admin.avatar %}
+							<img id="avatarPreview" src="{{ admin.avatar.url }}" alt="Avatar" class="rounded-circle" width="140" height="140">
+						{% else %}
+							<img id="avatarPreview" src="{% static 'images/hlogo2.png' %}" alt="Avatar" class="rounded-circle" width="140" height="140">
+						{% endif %}
 					</div>
-					<h5 class="card-title mb-0">{{ user.get_full_name|default:'Operational Admin' }}</h5>
-					<div class="small text-muted mb-2">{{ user.email|default:'operational@hclsdb.com' }}</div>
+					<h5 class="card-title mb-0">{{ admin.username|default:'Operational Admin' }}</h5>
+					<div class="small text-muted mb-2">{{ admin.email|default:'operational@hclsdb.com' }}</div>
 					<div class="mb-3"><span class="badge bg-info">Operational Admin</span></div>
 
-					<div class="d-grid gap-2">
-						<button class="btn btn-outline-primary" data-bs-toggle="modal" data-bs-target="#editProfileModal">Edit Profile</button>
-						<button class="btn btn-outline-secondary" data-bs-toggle="modal" data-bs-target="#changePasswordModal">Change Password</button>
+					<div class="mb-2 small text-muted">
+						<div>Created By: <strong>{{ created_by_name|default:'System' }}</strong></div>
+						<div>Created On: <strong>{{ created_on|default:'—' }}</strong></div>
 					</div>
+
+					<div class="d-grid gap-2">
+                        <button id="showEditBtn" class="btn btn-outline-primary">Edit Profile</button>
+                        <button class="btn btn-outline-secondary" data-bs-toggle="modal" data-bs-target="#changePasswordModal">Change Password</button>
+                    </div>
+				</div>
+			</div>
+
+			<!-- Inline edit form (hidden by default) -->
+			<div class="card mt-3" id="inlineEditCard" style="display:none;">
+				<div class="card-body">
+					{% if message %}
+						<div class="alert alert-success">{{ message }}</div>
+					{% endif %}
+					<form method="post" action="" id="inlineEditForm" enctype="multipart/form-data">
+						{% csrf_token %}
+						<div class="mb-3">
+							<label class="form-label">Name</label>
+							<input name="name" type="text" class="form-control" value="{{ admin.username|default:'' }}">
+						</div>
+						<div class="mb-3">
+							<label class="form-label">Phone</label>
+							<input name="phone" type="tel" class="form-control" value="{{ admin.phone|default:'' }}">
+						</div>
+						<div class="mb-3">
+							<label class="form-label">Address</label>
+							<input name="address" type="text" class="form-control" value="{{ admin.address|default:'' }}">
+						</div>
+						<div class="mb-3">
+							<label class="form-label">Gender</label>
+							<select name="gender" class="form-select">
+								<option value="">Select</option>
+								<option value="Male" {% if admin.gender == 'Male' %}selected{% endif %}>Male</option>
+								<option value="Female" {% if admin.gender == 'Female' %}selected{% endif %}>Female</option>
+								<option value="Other" {% if admin.gender == 'Other' %}selected{% endif %}>Other</option>
+							</select>
+						</div>
+						<div class="mb-3">
+							<label class="form-label">Email</label>
+							<input name="email" type="email" class="form-control" value="{{ admin.email|default:'' }}" readonly>
+						</div>
+						<div class="text-end">
+							<button class="btn btn-primary" type="submit">Save changes</button>
+							<button id="cancelEditBtn" type="button" class="btn btn-outline-secondary">Cancel</button>
+						</div>
+					</form>
 				</div>
 			</div>
 
@@ -34,6 +84,52 @@
 		</div>
 
 		<div class="col-lg-8">
+			<!-- Full-width edit card (hidden by default) -->
+			<div class="card mb-3" id="fullEditCard" style="display:none;">
+				<div class="card-body">
+					{% if message %}
+						<div class="alert alert-success">{{ message }}</div>
+					{% endif %}
+					<form method="post" action="" id="fullEditForm" enctype="multipart/form-data">
+						{% csrf_token %}
+						<div class="row g-3">
+							<div class="col-md-6">
+								<label class="form-label">Name</label>
+								<input name="name" type="text" class="form-control" value="{{ admin.username|default:'' }}">
+							</div>
+							<div class="col-md-6">
+								<label class="form-label">Phone</label>
+								<input name="phone" type="tel" class="form-control" value="{{ admin.phone|default:'' }}">
+							</div>
+							<div class="col-12">
+								<label class="form-label">Address</label>
+								<input name="address" type="text" class="form-control" value="{{ admin.address|default:'' }}">
+							</div>
+							<div class="col-md-4">
+								<label class="form-label">Gender</label>
+								<select name="gender" class="form-select">
+									<option value="">Select</option>
+									<option value="Male" {% if admin.gender == 'Male' %}selected{% endif %}>Male</option>
+									<option value="Female" {% if admin.gender == 'Female' %}selected{% endif %}>Female</option>
+									<option value="Other" {% if admin.gender == 'Other' %}selected{% endif %}>Other</option>
+								</select>
+							</div>
+							<div class="col-md-8">
+								<label class="form-label">Email</label>
+								<input name="email" type="email" class="form-control" value="{{ admin.email|default:'' }}" readonly>
+							</div>
+							<div class="col-12">
+								<label class="form-label">Avatar</label>
+								<input id="fullAvatarFile" name="avatar" type="file" accept="image/*" class="form-control">
+							</div>
+							<div class="col-12 text-end">
+								<button class="btn btn-primary" type="submit">Save changes</button>
+								<button id="cancelFullEditBtn" type="button" class="btn btn-outline-secondary">Cancel</button>
+							</div>
+						</div>
+					</form>
+				</div>
+			</div>
 			<div class="card">
 				<div class="card-body">
 					<div class="d-flex justify-content-between align-items-center mb-3">
@@ -63,16 +159,16 @@
 			<div class="card mt-3">
 				<div class="card-body">
 					<h6 class="card-title">Contact & Settings</h6>
-					<form id="contactForm" method="post" action="#">
+					<form id="contactForm" method="post" action="" enctype="multipart/form-data">
 						{% csrf_token %}
 						<div class="row g-3">
 							<div class="col-md-6">
 								<label class="form-label">Name</label>
-								<input name="name" type="text" class="form-control" value="{{ user.get_full_name|default:'' }}">
+								<input name="name" type="text" class="form-control" value="{{ admin.username|default:'' }}">
 							</div>
 							<div class="col-md-6">
 								<label class="form-label">Email</label>
-								<input name="email" type="email" class="form-control" value="{{ user.email|default:'' }}">
+								<input name="email" type="email" class="form-control" value="{{ admin.email|default:'' }}">
 							</div>
 							<div class="col-12">
 								<label class="form-label">Avatar</label>
@@ -168,6 +264,37 @@
 	}
 	handleFileInput(document.getElementById('avatarFile'), 'avatarPreview');
 	handleFileInput(document.getElementById('modalAvatarFile'), 'avatarPreview');
+})();
+</script>
+
+<script>
+// Toggle full-width edit form (prefers fullEditCard if present)
+(function(){
+	const showBtn = document.getElementById('showEditBtn');
+	const fullCard = document.getElementById('fullEditCard');
+	const inlineCard = document.getElementById('inlineEditCard');
+	const cancelInline = document.getElementById('cancelEditBtn');
+	const cancelFull = document.getElementById('cancelFullEditBtn');
+
+	function showCard(card){
+		if (!card) return;
+		card.style.display = card.style.display === 'none' ? '' : 'none';
+		if (card.style.display === '') window.scrollTo({ top: card.offsetTop - 20, behavior: 'smooth' });
+	}
+
+	if (showBtn){
+		showBtn.addEventListener('click', function(){
+			if (inlineCard) inlineCard.style.display = 'none';
+			showCard(fullCard || inlineCard);
+		});
+	}
+
+	if (cancelInline){
+		cancelInline.addEventListener('click', function(e){ e.preventDefault(); if (inlineCard) inlineCard.style.display = 'none'; if (fullCard) fullCard.style.display = 'none'; });
+	}
+	if (cancelFull){
+		cancelFull.addEventListener('click', function(e){ e.preventDefault(); if (fullCard) fullCard.style.display = 'none'; if (inlineCard) inlineCard.style.display = 'none'; });
+	}
 })();
 </script>
 

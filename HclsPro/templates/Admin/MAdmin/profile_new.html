@@ -2,96 +2,306 @@
 {% load static %}
 
 {% block content %}
+<div class="container py-4">
+	<div class="row g-4">
+		<div class="col-lg-4">
+			<div class="card card-modern text-center shadow-sm">
+				<div class="card-body">
+					<div class="mb-3 position-relative mx-auto" style="width:140px;">
+						{% if admin.avatar %}
+							<img id="avatarPreview" src="{{ admin.avatar.url }}" alt="Avatar" class="rounded-circle border" width="140" height="140" style="object-fit:cover;">
+						{% else %}
+							<img id="avatarPreview" src="{% static 'images/hlogo2.png' %}" alt="Avatar" class="rounded-circle border" width="140" height="140" style="object-fit:cover;">
+						{% endif %}
+						<label for="avatarFile" class="position-absolute" style="right:-6px;bottom:-6px">
+							<span class="btn btn-sm btn-rich" style="padding:.25rem .5rem">Change</span>
+						</label>
+					</div>
+					<h5 class="card-title mb-0">{{ admin.username|default:'Managerial Admin' }}</h5>
+					<div class="small text-muted mb-2">{{ admin.email|default:'manager@hclsdb.com' }}</div>
+					<div class="mb-3"><span class="badge rounded-pill bg-info">Managerial Admin</span></div>
 
-<div class="container py-5">
-	<div class="row justify-content-center">
-		<div class="col-md-8">
-			<!-- Profile Card -->
-			<div class="card shadow-sm">
-				<div class="card-header bg-primary text-white">
-					<h4 class="mb-0">👤 My Profile</h4>
+					<div class="d-flex gap-2 justify-content-center">
+						<button id="showEditBtn" class="btn btn-rich">Edit Profile</button>
+						<button class="btn btn-outline-secondary" data-bs-toggle="modal" data-bs-target="#changePasswordModal">Change Password</button>
+					</div>
 				</div>
-				<div class="card-body p-5">
-					{% if admin %}
-						<!-- Admin Information -->
-						<div class="mb-4">
-							<h5 class="mb-4">Profile Information</h5>
-							<div class="row mb-3">
-								<div class="col-md-6">
-									<label class="form-label text-muted"><strong>Email:</strong></label>
-									<p class="h6">{{ admin.email }}</p>
-								</div>
-								<div class="col-md-6">
-									<label class="form-label text-muted"><strong>Username:</strong></label>
-									<p class="h6">{{ admin.username }}</p>
-								</div>
-							</div>
+			</div>
 
-							<div class="row mb-3">
-								<div class="col-md-6">
-									<label class="form-label text-muted"><strong>Phone:</strong></label>
-									<p class="h6">{{ admin.phone|default:"Not provided" }}</p>
-								</div>
-								<div class="col-md-6">
-									<label class="form-label text-muted"><strong>Admin Type:</strong></label>
-									<p class="h6"><span class="badge bg-primary">Managerial Admin (MAdmin)</span></p>
-								</div>
-							</div>
-
-							<div class="row mb-3">
-								<div class="col-md-6">
-									<label class="form-label text-muted"><strong>Account Status:</strong></label>
-									<p class="h6">
-										{% if admin.status %}
-											<span class="badge bg-success">✓ Active</span>
-										{% else %}
-											<span class="badge bg-warning">⏳ Pending Activation</span>
-										{% endif %}
-									</p>
-								</div>
-								<div class="col-md-6">
-									<label class="form-label text-muted"><strong>Account ID:</strong></label>
-									<p class="h6">{{ admin.id }}</p>
-								</div>
-							</div>
-						</div>
-
-						<hr>
-
-						<!-- Admin Permissions -->
-						<div class="mb-4">
-							<h5 class="mb-3">Your Permissions</h5>
-							<ul class="list-unstyled">
-								<li class="mb-2"><i class="fas fa-check-circle text-success"></i> View Dashboard</li>
-								<li class="mb-2"><i class="fas fa-check-circle text-success"></i> Add Operational Admins</li>
-								<li class="mb-2"><i class="fas fa-check-circle text-success"></i> Manage Staff</li>
-								<li class="mb-2"><i class="fas fa-check-circle text-success"></i> View Reports</li>
-							</ul>
-						</div>
-
-						<hr>
-
-						<!-- Action Buttons -->
-						<div class="mt-4 d-flex gap-2">
-							<a href="{% url 'dashboard' %}" class="btn btn-primary">
-								<i class="fas fa-arrow-left"></i> Back to Dashboard
-							</a>
-							<a href="{% url 'add' %}" class="btn btn-success">
-								<i class="fas fa-plus"></i> Add Operational Admin
-							</a>
-							<a href="{% url 'logout' %}" class="btn btn-danger">
-								<i class="fas fa-sign-out-alt"></i> Logout
-							</a>
-						</div>
-					{% else %}
-						<div class="alert alert-warning" role="alert">
-							Profile information not found. Please <a href="{% url 'login' %}">login again</a>.
-						</div>
+			<!-- Inline edit form (hidden by default) -->
+			<div class="card mt-3" id="inlineEditCard" style="display:none;">
+				<div class="card-body">
+					{% if message %}
+						<div class="alert alert-success">{{ message }}</div>
 					{% endif %}
+					<form method="post" action="" id="inlineEditForm" enctype="multipart/form-data">
+						{% csrf_token %}
+						<div class="mb-3">
+							<label class="form-label">Name</label>
+							<input name="name" type="text" class="form-control" value="{{ admin.username|default:'' }}">
+						</div>
+						<div class="mb-3">
+							<label class="form-label">Avatar</label>
+							<input id="inlineAvatarFile" name="avatar" type="file" accept="image/*" class="form-control">
+						</div>
+						<div class="mb-3">
+							<label class="form-label">Phone</label>
+							<input name="phone" type="tel" class="form-control" value="{{ admin.phone|default:'' }}">
+						</div>
+						<div class="mb-3">
+							<label class="form-label">Address</label>
+							<input name="address" type="text" class="form-control" value="{{ admin.address|default:'' }}">
+						</div>
+						<div class="mb-3">
+							<label class="form-label">Gender</label>
+							<select name="gender" class="form-select">
+								<option value="">Select</option>
+								<option value="Male" {% if admin.gender == 'Male' %}selected{% endif %}>Male</option>
+								<option value="Female" {% if admin.gender == 'Female' %}selected{% endif %}>Female</option>
+								<option value="Other" {% if admin.gender == 'Other' %}selected{% endif %}>Other</option>
+							</select>
+						</div>
+						<div class="mb-3">
+							<label class="form-label">Email</label>
+							<input name="email" type="email" class="form-control" value="{{ admin.email|default:'' }}" readonly>
+						</div>
+						<div class="text-end">
+							<button class="btn btn-primary" type="submit">Save changes</button>
+							<button id="cancelEditBtn" type="button" class="btn btn-outline-secondary">Cancel</button>
+						</div>
+					</form>
+				</div>
+			</div>
+
+			<div class="card mt-3">
+				<div class="card-body">
+					<h6 class="card-title">Summary</h6>
+					<ul class="list-unstyled mb-0">
+						<li class="d-flex justify-content-between"><span>Appointments today</span><strong>{{ appointments_today|default:0 }}</strong></li>
+						<li class="d-flex justify-content-between"><span>Pending admissions</span><strong>{{ admissions_pending|default:0 }}</strong></li>
+						<li class="d-flex justify-content-between"><span>Unread messages</span><strong>{{ unread_messages|default:0 }}</strong></li>
+					</ul>
+				</div>
+			</div>
+		</div>
+
+		<div class="col-lg-8">
+			<!-- Full-width edit card (hidden by default) -->
+			<div class="card mb-3" id="fullEditCard" style="display:none;">
+				<div class="card-body">
+					{% if message %}
+						<div class="alert alert-success">{{ message }}</div>
+					{% endif %}
+					<form method="post" action="" id="fullEditForm" enctype="multipart/form-data">
+						{% csrf_token %}
+						<div class="row g-3">
+							<div class="col-md-6">
+								<label class="form-label">Name</label>
+								<input name="name" type="text" class="form-control" value="{{ admin.username|default:'' }}">
+							</div>
+							<div class="col-md-6">
+								<label class="form-label">Phone</label>
+								<input name="phone" type="tel" class="form-control" value="{{ admin.phone|default:'' }}">
+							</div>
+							<div class="col-12">
+								<label class="form-label">Address</label>
+								<input name="address" type="text" class="form-control" value="{{ admin.address|default:'' }}">
+							</div>
+							<div class="col-md-4">
+								<label class="form-label">Gender</label>
+								<select name="gender" class="form-select">
+									<option value="">Select</option>
+									<option value="Male" {% if admin.gender == 'Male' %}selected{% endif %}>Male</option>
+									<option value="Female" {% if admin.gender == 'Female' %}selected{% endif %}>Female</option>
+									<option value="Other" {% if admin.gender == 'Other' %}selected{% endif %}>Other</option>
+								</select>
+							</div>
+							<div class="col-md-8">
+								<label class="form-label">Email</label>
+								<input name="email" type="email" class="form-control" value="{{ admin.email|default:'' }}" readonly>
+							</div>
+							<div class="col-12">
+								<label class="form-label">Avatar</label>
+								<div class="d-flex gap-2 align-items-center">
+									<input id="fullAvatarFile" name="avatar" type="file" accept="image/*" class="form-control" style="max-width:320px;">
+									<small class="text-muted">PNG / JPG — max 2MB</small>
+								</div>
+							</div>
+							<div class="col-12 text-end">
+								<button class="btn btn-primary" type="submit">Save changes</button>
+								<button id="cancelFullEditBtn" type="button" class="btn btn-outline-secondary">Cancel</button>
+							</div>
+						</div>
+					</form>
+				</div>
+			</div>
+			<div class="card">
+				<div class="card-body">
+					<div class="d-flex justify-content-between align-items-center mb-3">
+						<h5 class="card-title mb-0">Recent Activity</h5>
+						<small class="text-muted">Latest system events</small>
+					</div>
+					<div class="list-group">
+						{% for ev in recent_activities %}
+							<div class="list-group-item d-flex justify-content-between align-items-start">
+								<div>
+									<div class="fw-semibold">{{ ev.title|default:ev.description|truncatechars:50 }}</div>
+									<div class="small text-muted">{{ ev.timestamp|date:'SHORT_DATETIME_FORMAT' }} — {{ ev.source|default:'System' }}</div>
+								</div>
+								<div class="text-end">
+									{% if ev.level == 'error' %}<span class="badge bg-danger">Error</span>
+									{% elif ev.level == 'warning' %}<span class="badge bg-warning text-dark">Warn</span>
+									{% else %}<span class="badge bg-success">OK</span>{% endif %}
+								</div>
+							</div>
+						{% empty %}
+							<div class="list-group-item text-center text-muted">No recent activity.</div>
+						{% endfor %}
+					</div>
+				</div>
+			</div>
+
+			<div class="card mt-3">
+				<div class="card-body">
+					<h6 class="card-title">Contact & Settings</h6>
+					<form id="contactForm" method="post" action="" enctype="multipart/form-data">
+						{% csrf_token %}
+						<div class="row g-3">
+							<div class="col-md-6">
+								<label class="form-label">Name</label>
+								<input name="name" type="text" class="form-control" value="{{ admin.username|default:'' }}">
+							</div>
+							<div class="col-md-6">
+								<label class="form-label">Email</label>
+								<input name="email" type="email" class="form-control" value="{{ admin.email|default:'' }}">
+							</div>
+							<div class="col-12">
+								<label class="form-label">Avatar</label>
+								<input id="avatarFile" name="avatar" type="file" accept="image/*" class="form-control">
+							</div>
+							<div class="col-12 text-end">
+								<button class="btn btn-rich" type="submit">Save changes</button>
+							</div>
+						</div>
+					</form>
 				</div>
 			</div>
 		</div>
 	</div>
 </div>
+
+<!-- Edit Profile Modal (same form as above, for convenience) -->
+<div class="modal fade" id="editProfileModal" tabindex="-1" aria-hidden="true">
+	<div class="modal-dialog">
+		<div class="modal-content">
+			<div class="modal-header">
+				<h5 class="modal-title">Edit Profile</h5>
+				<button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+			</div>
+			<div class="modal-body">
+				<form id="editProfileForm" method="post" action="#" enctype="multipart/form-data">
+					{% csrf_token %}
+					<div class="mb-3">
+						<label class="form-label">Full name</label>
+						<input name="name" type="text" class="form-control" value="{{ user.get_full_name|default:'' }}">
+					</div>
+					<div class="mb-3">
+						<label class="form-label">Email</label>
+						<input name="email" type="email" class="form-control" value="{{ user.email|default:'' }}">
+					</div>
+					<div class="mb-3">
+						<label class="form-label">Avatar</label>
+						<input id="modalAvatarFile" name="avatar" type="file" accept="image/*" class="form-control">
+					</div>
+					<div class="text-end">
+							<button class="btn btn-rich" type="submit">Save</button>
+						<!-- <button class="btn btn-danger" type="submit">Cancel</button> -->
+					</div>
+				</form>
+			</div>
+		</div>
+	</div>
+</div>
+
+<!-- Change Password Modal -->
+<div class="modal fade" id="changePasswordModal" tabindex="-1" aria-hidden="true">
+	<div class="modal-dialog modal-sm">
+		<div class="modal-content">
+			<div class="modal-header">
+				<h5 class="modal-title">Change Password</h5>
+				<button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+			</div>
+			<div class="modal-body">
+				<form id="changePwdForm" method="post" action="#">
+					{% csrf_token %}
+					<div class="mb-2">
+						<label class="form-label">Current password</label>
+						<input name="current_password" type="password" class="form-control" required>
+					</div>
+					<div class="mb-2">
+						<label class="form-label">New password</label>
+						<input name="new_password" type="password" class="form-control" required>
+					</div>
+					<div class="mb-2">
+						<label class="form-label">Confirm new password</label>
+						<input name="confirm_password" type="password" class="form-control" required>
+					</div>
+						<div class="text-end">
+							<button id="changePwdBtn" class="btn btn-rich" type="submit">Change</button>
+						</div>
+				</form>
+			</div>
+		</div>
+	</div>
+</div>
+
+<script>
+// Avatar preview for both page and modal
+(function(){
+	function handleFileInput(input, previewId){
+		if (!input) return;
+		input.addEventListener('change', function(){
+			const f = this.files && this.files[0];
+			if (!f) return;
+			const url = URL.createObjectURL(f);
+			const img = document.getElementById(previewId);
+			if (img) img.src = url;
+		});
+	}
+	handleFileInput(document.getElementById('avatarFile'), 'avatarPreview');
+	handleFileInput(document.getElementById('modalAvatarFile'), 'avatarPreview');
+})();
+</script>
+
+<script>
+// Toggle full-width edit form (prefers fullEditCard if present)
+(function(){
+	const showBtn = document.getElementById('showEditBtn');
+	const fullCard = document.getElementById('fullEditCard');
+	const inlineCard = document.getElementById('inlineEditCard');
+	const cancelInline = document.getElementById('cancelEditBtn');
+	const cancelFull = document.getElementById('cancelFullEditBtn');
+
+	function showCard(card){
+		if (!card) return;
+		card.style.display = card.style.display === 'none' ? '' : 'none';
+		if (card.style.display === '') window.scrollTo({ top: card.offsetTop - 20, behavior: 'smooth' });
+	}
+
+	if (showBtn){
+		showBtn.addEventListener('click', function(){
+			if (inlineCard) inlineCard.style.display = 'none';
+			showCard(fullCard || inlineCard);
+		});
+	}
+
+	if (cancelInline){
+		cancelInline.addEventListener('click', function(e){ e.preventDefault(); if (inlineCard) inlineCard.style.display = 'none'; if (fullCard) fullCard.style.display = 'none'; });
+	}
+	if (cancelFull){
+		cancelFull.addEventListener('click', function(e){ e.preventDefault(); if (fullCard) fullCard.style.display = 'none'; if (inlineCard) inlineCard.style.display = 'none'; });
+	}
+})();
+</script>
 
 {% endblock %}

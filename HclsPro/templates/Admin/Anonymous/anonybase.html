@@ -8,46 +8,36 @@
     <title>{% block title %}Admin Panel{% endblock %}</title>
     <link rel="stylesheet" href="{% static 'css/admin.css' %}">
     <link rel="stylesheet" href="{% static 'css/bootstrap.css' %}">
+    <link rel="stylesheet" href="{% static 'css/theme.css' %}">
     <link rel="icon" href="{% static 'images/hlogo2.png' %}" type="image/png">
     
     {% block extra_head %}{% endblock %}
 </head> 
 <body>
-    <!-- Header Starts-->
-    <header>
-        <div class="row">
-            <div class="col-sm-1">
-                <a href="{% url 'home' %}"><img src="{% static 'images/hospitallogo.png' %}" alt="Logo" width="100px" height="100px"></a>
-            </div>
-            <div class="col-sm-11">
-                <h1 style="margin-left: 100px; margin-top: 20px;">HCLSDB - Hospital Management System Admin Panel</h1>
-            </div>
-        </div>
-    </header>
-    <nav class="navbar navbar-expand-lg navbar-dark bg-dark">
+    <header class="site-header py-3">
         <div class="container-fluid">
-            <ul class="navbar-nav ms-auto">
-                <li class="nav-item">
-                    <a class="nav-link text-white " style="font-size: 20px;" href="{% url 'home' %}">Home</a>
-                </li>
+            <div class="d-flex align-items-center justify-content-between">
+                <div class="site-brand">
+                    <a href="{% url 'home' %}"><img src="{% static 'images/hospitallogo.png' %}" alt="Logo" width="72" height="72"></a>
+                    <div>
+                        <div class="h5 mb-0 text-white"><strong>AHS</strong></div>
+                        <div class="small text-white-50">Hospital Management Admin</div>
+                    </div>
+                </div>
 
-                <li class="nav-item">
-                    <a class="nav-link text-white" style="font-size: 20px;" href="{% url 'login' %}">Login</a>
-                </li>
-
-                <li class="nav-item">
-                    <a class="nav-link text-white" style="font-size: 20px;" href="{% url 'register' %}">Register</a>
-                </li>
-                <li class="nav-item">
-                    <a class="nav-link text-white" style="font-size: 20px;" href="#">ContactUs</a>
-                </li>
-            </ul>
+                                <nav class="navbar navbar-expand-lg navbar-dark bg-transparent p-0">
+                                        <div class="d-flex gap-2">
+                                                <a class="btn btn-rich secondary" href="{% url 'home' %}"><span class="icon">&#127968;</span><span>Home</span></a>
+                                                <a class="btn btn-rich secondary" href="{% url 'login' %}"><span class="icon">&#128274;</span><span>Login</span></a>
+                                                <a class="btn btn-rich secondary" href="{% url 'register' %}"><span class="icon">&#9997;</span><span>Register</span></a>
+                                        </div>
+                                </nav>
+            </div>
         </div>
-    </nav>
     </header>
-    <hr />
-</body>
-    <main>
+
+        <!-- Hero removed from base; include on home page only -->
+    <main class="container py-4">
         {% block content %}{% endblock %}
     </main>
     <hr/>
@@ -56,14 +46,39 @@
                 <div class="container-fluid d-flex justify-content-between align-items-center">
 
                     <div class="small">
-                        &copy; {{ year|default:2026 }} HCLSDB App. All rights reserved.
+                        &copy; {{ year|default:2026 }} AHS App. All rights reserved.
                     </div>
 
                     <div class="small">
                         <a href="#" class="text-white text-decoration-none me-3">About</a>
                         <a href="#" class="text-white text-decoration-none me-3">Privacy</a>
-                        <a href="#" class="text-white text-decoration-none">Contact</a>
+                        <a href="#" class="text-white text-decoration-none" data-bs-toggle="modal" data-bs-target="#contactModal">Contact</a>
                     </div>
+                    <div class="modal fade" id="contactModal" tabindex="-1" aria-labelledby="contactModalLabel" aria-hidden="true">
+    <div class="modal-dialog modal-dialog-centered">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="contactModalLabel">Contact AHS</h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+            <div class="modal-body">
+                <form id="contactForm">
+                    <div class="mb-3">
+                        <label for="contactEmail" class="form-label">Email</label>
+                        <input type="email" class="form-control" id="contactEmail" placeholder="you@example.com" required>
+                    </div>
+                    <div class="mb-3">
+                        <label for="contactMessage" class="form-label">Message</label>
+                        <textarea class="form-control" id="contactMessage" rows="3" required></textarea>
+                    </div>
+                    <div class="d-grid">
+                        <button class="btn btn-primary" type="submit">Send</button>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+</div>
 
                     <div>
                         <a href="#"><img src="{% static 'images/facebook.png' %}" width="22" height="22"></a>

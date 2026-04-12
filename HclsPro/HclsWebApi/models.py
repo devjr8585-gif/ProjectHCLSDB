@@ -27,6 +27,8 @@ class AdminLogin(models.Model):
     Address = models.CharField(max_length=100)
     AdminType = models.ForeignKey(AdminType, on_delete=models.CASCADE, db_column='AdminType')
     Status = models.BooleanField(default=False)
+    # Createdby = models.CharField(max_length=100, null=True, blank=True)
+    # CreatedOn = models.DateTimeField(auto_now_add=True)
 
     def __str__(self):
         return f"{self.Name} ({self.Id})"
@@ -145,9 +147,17 @@ class CheckLogin(models.Model):
     email = models.EmailField()
     username = models.CharField(max_length=100, null=True, blank=True)
     phone = models.CharField(max_length=15,null=True, blank=True)
+    # additional profile fields
+    address = models.CharField(max_length=200, null=True, blank=True, db_column='Address')
+    gender = models.CharField(max_length=10, null=True, blank=True, db_column='Gender')
+    # avatar image
+    avatar = models.ImageField(upload_to='avatars/', null=True, blank=True, db_column='Avatar')
     password = models.CharField(max_length=100)
     admin_type = models.CharField(max_length=20)
     status = models.BooleanField(default=False)
+    # Track who created this admin and when
+    created_by = models.ForeignKey('self', null=True, blank=True, on_delete=models.SET_NULL, related_name='created_admins', db_column='CreatedBy')
+    created_on = models.DateTimeField(auto_now_add=True, db_column='CreatedOn')
 
     ADMIN_TYPE_CHOICES = (
         (1, 'MAdmin'),

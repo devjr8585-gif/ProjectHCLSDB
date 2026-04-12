@@ -1,29 +1,3 @@
-.myh2styles{
-            color: blue;
-            font-family: Arial, sans-serif;
-            font-size: 24px;
-            text-align: center;
-            margin-top: 20px;
-        }
-
-/* Status circle badges for dashboard */
-.status-circle{
-    width:56px;
-    height:56px;
-    border-radius:50%;
-    display:flex;
-    align-items:center;
-    justify-content:center;
-    color:#fff;
-    font-weight:700;
-    font-size:1.25rem;
-    box-shadow:0 2px 6px rgba(0,0,0,0.12);
-}
-.status-circle.active{ background:#198754; }
-.status-circle.inactive{ background:#dc3545; }
-.status-label{ font-size:0.85rem; color:#6c757d; }
-
-
 /* Modern theme for HCLSDB - simple, clean, responsive */
 :root{
   --brand:#0d6efd;
@@ -60,4 +34,19 @@ header.site-header{background:linear-gradient(90deg,var(--brand),#0a58ca);color:
 @media (max-width:767px){
   .sidebar{min-height:auto;margin-bottom:1rem}
 }
+
+/* Rich button styles */
+.btn-rich{
+  display:inline-flex;align-items:center;gap:.6rem;padding:.6rem .9rem;border-radius:10px;border:none;font-weight:600;color:#0b1b2b;background:linear-gradient(180deg,#fff,#f3f6fb);box-shadow:0 6px 18px rgba(13,110,253,0.12);transition:transform .12s ease, box-shadow .12s ease;
+}
+.btn-rich .icon{width:20px;height:20px;display:inline-flex;align-items:center;justify-content:center}
+.btn-rich:hover{transform:translateY(-3px);box-shadow:0 12px 30px rgba(13,110,253,0.18)}
+.btn-rich.primary{background:linear-gradient(90deg,var(--brand),#0a58ca);color:#fff}
+.btn-rich.secondary{background:linear-gradient(90deg,#6c757d,#495057);color:#fff}
+.btn-rich.ghost{background:transparent;border:1px solid rgba(13,110,253,0.12);color:var(--brand)}
+
+/* Hero/banner */
+.hero{background:linear-gradient(180deg, rgba(13,110,253,0.06), rgba(13,110,253,0.02));padding:3rem;border-radius:12px;margin-bottom:1.25rem}
+.hero h1{font-size:2rem;margin-bottom:.5rem}
+.hero p{color:var(--muted);margin-bottom:1rem}
 
