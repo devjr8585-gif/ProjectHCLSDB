@@ -10,7 +10,7 @@ pipeline {
 
         stage('Checkout') {
             steps {
-                git branch: 'main', url: 'https://github.com/your-org/ProjectHCLSDB.git'
+                git branch: 'main', url: 'https://github.com/devjr8585-gif/ProjectHCLSDB.git'
             }
         }
 
