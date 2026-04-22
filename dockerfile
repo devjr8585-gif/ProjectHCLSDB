@@ -1,4 +1,16 @@
-FROM openjdk:17-jdk-slim
+FROM python:3.10-slim
+
+# Set working directory
 WORKDIR /app
-COPY target/*.jar app.jar
-ENTRYPOINT ["java", "-jar", "app.jar"]
+
+# Copy dependency file first (for caching)
+COPY requirements.txt .
+
+# Install dependencies
+RUN pip install --no-cache-dir -r requirements.txt
+
+# Copy application code
+COPY . .
+
+# Run the app
+CMD ["python", "app.py"]
