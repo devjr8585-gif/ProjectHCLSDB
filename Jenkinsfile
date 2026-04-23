@@ -2,7 +2,7 @@ pipeline {
     agent any
 
     environment {
-        IMAGE_NAME = "your-dockerhub-username/projecthclsdb"
+        IMAGE_NAME = "joel123/projecthclsdb"
         TAG = "latest"
     }
 
