@@ -2,7 +2,7 @@ pipeline {
     agent any
 
     environment {
-        IMAGE_NAME = "joel123/projecthclsdb"
+        IMAGE_NAME = "joelsp123/projecthclsdb"
         TAG = "latest"
     }
 
