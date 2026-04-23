@@ -15,31 +15,31 @@ pipeline {
         }
 
         stage('Build Docker Image') {
-    steps {
-        sh """
-        echo "Building Docker image: ${IMAGE_NAME}:${TAG}"
-        docker build -t ${IMAGE_NAME}:${TAG} .
-        """
-    }
-}
+            steps {
+                sh """
+                echo "Building Docker image: ${IMAGE_NAME}:${TAG}"
+                docker build -t ${IMAGE_NAME}:${TAG} .
+                """
+            }
+        }
 
         stage('Login to DockerHub') {
-    steps {
-        withCredentials([usernamePassword(
-            credentialsId: 'docker-cred',
-            usernameVariable: 'DOCKER_USER',
-            passwordVariable: 'DOCKER_PASS'
-        )]) {
-            sh '''
-                echo $DOCKER_PASS | docker login -u $DOCKER_USER --password-stdin
-            '''
+            steps {
+                withCredentials([usernamePassword(
+                    credentialsId: 'docker-cred',
+                    usernameVariable: 'DOCKER_USER',
+                    passwordVariable: 'DOCKER_PASS'
+                )]) {
+                    sh """
+                    echo $DOCKER_PASS | docker login -u $DOCKER_USER --password-stdin
+                    """
+                }
+            }
         }
-    }
-}
 
         stage('Push Image') {
             steps {
-                sh 'docker push $IMAGE_NAME:$TAG'
+                sh "docker push ${IMAGE_NAME}:${TAG}"
             }
         }
     }
