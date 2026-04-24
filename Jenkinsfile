@@ -15,21 +15,20 @@ pipeline {
         }
 
         stage('Build Docker Image') {
-    steps {
-        script {
-            // Debug environment variables
-            sh 'echo IMAGE_NAME=$IMAGE_NAME'
-            sh 'echo TAG=$TAG'
+            steps {
+                script {
+                    sh 'echo IMAGE_NAME=$IMAGE_NAME'
+                    sh 'echo TAG=$TAG'
 
-            def image = "${env.IMAGE_NAME}:${env.TAG}"
+                    def image = "${env.IMAGE_NAME}:${env.TAG}"
 
-            sh """
-            echo "Building Docker image: ${image}"
-            docker build -t ${image} .
-            """
+                    sh """
+                        echo "Building Docker image: ${image}"
+                        docker build -t ${image} .
+                    """
+                }
+            }
         }
-    }
-}
 
         stage('Login to DockerHub') {
             steps {
@@ -38,18 +37,29 @@ pipeline {
                     usernameVariable: 'DOCKER_USER',
                     passwordVariable: 'DOCKER_PASS'
                 )]) {
-                    sh """
-                    echo $DOCKER_PASS | docker login -u $DOCKER_USER --password-stdin
-                    """
+                    sh '''
+                        echo "$DOCKER_PASS" | docker login -u "$DOCKER_USER" --password-stdin
+                    '''
                 }
             }
         }
 
         stage('Push Image') {
-    steps {
-        script {
-            def image = "${env.IMAGE_NAME}:${env.TAG}"
-            sh "docker push ${image}"
+            steps {
+                script {
+                    def image = "${env.IMAGE_NAME}:${env.TAG}"
+                    sh "docker push ${image}"
+                }
+            }
+        }
+    }
+
+    post {
+        success {
+            echo "Docker image pushed successfully!"
+        }
+        failure {
+            echo "Build failed. Check logs above."
         }
     }
 }
