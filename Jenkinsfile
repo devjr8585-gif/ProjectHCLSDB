@@ -17,7 +17,12 @@ pipeline {
         stage('Build Docker Image') {
     steps {
         script {
+            // Debug environment variables
+            sh 'echo IMAGE_NAME=$IMAGE_NAME'
+            sh 'echo TAG=$TAG'
+
             def image = "${env.IMAGE_NAME}:${env.TAG}"
+
             sh """
             echo "Building Docker image: ${image}"
             docker build -t ${image} .
