@@ -15,13 +15,16 @@ pipeline {
         }
 
         stage('Build Docker Image') {
-            steps {
-                sh """
-                echo "Building Docker image: ${IMAGE_NAME}:${TAG}"
-                docker build -t ${IMAGE_NAME}:${TAG} .
-                """
-            }
+    steps {
+        script {
+            def image = "${env.IMAGE_NAME}:${env.TAG}"
+            sh """
+            echo "Building Docker image: ${image}"
+            docker build -t ${image} .
+            """
         }
+    }
+}
 
         stage('Login to DockerHub') {
             steps {
@@ -38,9 +41,12 @@ pipeline {
         }
 
         stage('Push Image') {
-            steps {
-                sh "docker push ${IMAGE_NAME}:${TAG}"
-            }
+    steps {
+        script {
+            def image = "${env.IMAGE_NAME}:${env.TAG}"
+            sh "docker push ${image}"
         }
     }
 }
+    
+
