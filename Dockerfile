@@ -2,7 +2,7 @@ FROM python:3.13.7-slim
 
 WORKDIR /app
 
-# Install system dependencies required for mysqlclient
+# Install system dependencies
 RUN apt-get update && apt-get install -y \
     gcc \
     pkg-config \
@@ -12,11 +12,14 @@ RUN apt-get update && apt-get install -y \
 
 COPY requirements.txt .
 
-# Upgrade pip + install Python dependencies
 RUN pip install --upgrade pip && \
     pip install --no-cache-dir -r requirements.txt
 
+# Copy full project
 COPY . .
+
+# Move into correct folder where manage.py exists
+WORKDIR /app/HclsPro
 
 ENV PYTHONUNBUFFERED=1
 
